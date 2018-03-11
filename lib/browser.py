@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import os
+from time import sleep as wait
 import configinfo
 import lib.logUntil
 
@@ -37,12 +38,12 @@ class browser(object):
             desired_capabilities = {'platform': 'ANY', 'version': '',
                                     'javascriptEnabled': True}
             if browserName.lower() == 'chrome':
-                dc['browserName'] = 'chrome'
+                desired_capabilities['browserName'] = 'chrome'
             elif browserName.lower() == 'firefox':
-                dc['browserName'] = 'firefox'
-                dc['marionette'] = False
+                desired_capabilities['browserName'] = 'firefox'
+                desired_capabilities['marionette'] = False
             elif browserName.lower() == 'ie':
-                dc['browserName'] = 'internet explorer'
+                desired_capabilities['browserName'] = 'internet explorer'
             else:
                 log.error('无此浏览器驱动或者指定浏览器类型错误')
                 raise NameError('请指定浏览器类型：chrome firefox ie')
@@ -307,7 +308,7 @@ class browser(object):
                 self.driver.switch_to.window(handle)
                 self.wait(3)
                 try:
-                    driver.find_element(*winB)
+                    self.driver.find_element(*winB)
                 except NoSuchElementException:
                     pass
                 else:
@@ -372,7 +373,7 @@ class browser(object):
         确认alert弹窗
         :return: 返回alert文本信息
         """
-        WebDriverWait(self.driver, 5).until(ec.alert_is_present())
+        WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert = self.driver.switch_to.alert
         alert_text = alert.text
         alert.accept()
@@ -384,7 +385,7 @@ class browser(object):
         取消alert弹窗
         :return: 返回alert文本信息
         """
-        WebDriverWait(self.driver, 5).until(ec.alert_is_present())
+        WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert = self.driver.switch_to.alert
         alert_text = alert.text
         alert.dismiss()
